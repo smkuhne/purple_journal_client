@@ -38,36 +38,42 @@ function get_related(keywords, done, base_url) {
       var most_pos = undefined;
       var most_nut = undefined;
 
-      let count = Math.min(9, news_obj.totalResults);
+      let count = Math.min(9, news_obj.totalResults - 1);
       function recurse_articles() {
+        if( count == 0 ) {
+          done(most_neg, most_nut, most_pos)
+        }
         var current = news_obj.articles[count];
-
-        analyze_article(current.url, (stage, content) => {
-          current.document_score = content.document_score;
-          current.document_magnitude = content.document_magnitude;
-          if (current.url != base_url && stage == 1) {
-            if (most_neg === undefined) {
-              most_neg = current;
-              most_nut = current;
-              most_pos = current;
-            }
-            else if (current.document_score < most_neg.document_score || (current.document_score == most_neg.document_score && current.document_magnitude > most_neg.document_magnitude)) {
-              most_neg = current;
-            } if (current.document_score > most_pos.document_score || (current.document_score == most_pos.document_score && current.document_magnitude > most_pos.document_magnitude)) {
+        if(current.url !== undefined) {
+          analyze_article(current.url, (stage, content) => {
+            current.document_score = content.document_score;
+            current.document_magnitude = content.document_magnitude;
+            if (current.url != base_url && stage == 1) {
+              if (most_neg === undefined) {
+                most_neg = current;
+                most_nut = current;
                 most_pos = current;
-            } if (Math.abs(current.document_score) <= Math.abs(most_nut.document_score) && current.document_magnitude >= most_nut.document_magnitude) {
-              most_nut = current;
-            } 
-          }
-          count -= 1;
-
-          if (count >= 0) { 
+              }
+              else if (current.document_score < most_neg.document_score || (current.document_score == most_neg.document_score && current.document_magnitude > most_neg.document_magnitude)) {
+                most_neg = current;
+              } if (current.document_score > most_pos.document_score || (current.document_score == most_pos.document_score && current.document_magnitude > most_pos.document_magnitude)) {
+                  most_pos = current;
+              } if (Math.abs(current.document_score) <= Math.abs(most_nut.document_score) && current.document_magnitude >= most_nut.document_magnitude) {
+                most_nut = current;
+              } 
+            }
+            count -= 1;
             recurse_articles()
-          } else { done(most_neg, most_nut, most_pos)}
-        }, false);
-    }
+
+          }, false);
+        } else {
+          // If there is no url. Go to the next article
+          count -= 1;
+          recurse_articles();
+        }
+      }
     recurse_articles();
-  }
+    }
   }
 }
 

@@ -31,6 +31,7 @@ sidebar_slider.innerHTML = arrow;
 document.getElementById('arrow').setAttribute('class', 'arrow');
 
 var custom_reader = document.createElement('div');
+custom_reader.setAttribute('style', 'margin-left: 400px');
 var page = "original";
 
 /**
@@ -49,7 +50,8 @@ fetch(url)
       document.getElementById("switch-reader").addEventListener('click', function(){
         console.log('click');
         if (page == "original") {
-          page_content.innerHTML = custom_reader.innerHTML;
+          page_content.innerHTML = "";
+          page_content.appendChild(custom_reader);
           console.log('custom');
           page = "custom";
         } else if (page == "custom") {
@@ -78,7 +80,6 @@ document.getElementById("purple-slider").addEventListener("click", function(){
 function callback(stage, content) {
     switch(stage) {
         case 1:
-            console.log('Sentiment');
             var negative = 0;
             var neutral = 0;
             var positive = 0;
@@ -137,29 +138,33 @@ function callback(stage, content) {
             }
 
             if (content.document_score > -1 && content.document_score < -0.5) {
-              document.getElementById("overallSentiment").innerHTML = "Sentiment: Very Negative";
+              document.getElementById("overallSentiment").innerHTML = "Overall Article Sentiment: Very Negative";
             } else if (content.document_score > -0.5 && content.document_score < -0.25) {
-              document.getElementById("overallSentiment").innerHTML = "Sentiment: Negative";
+              document.getElementById("overallSentiment").innerHTML = "Overall Article Sentiment: Negative";
             } else if (content.document_score > -0.25 && content.document_score < 0.25) {
-              document.getElementById("overallSentiment").innerHTML = "Sentiment: Neutral";
+              document.getElementById("overallSentiment").innerHTML = "Overall Article Sentiment: Neutral";
             } else if (content.document_score > 0.25 && content.document_score < 0.5) {
-              document.getElementById("overallSentiment").innerHTML = "Sentiment: Positive";
+              document.getElementById("overallSentiment").innerHTML = "Overall Article Sentiment: Positive";
             } else if (content.document_score > 0.5 && content.document_score < 1) {
-              document.getElementById("overallSentiment").innerHTML = "Sentiment: Very Positive";
+              document.getElementById("overallSentiment").innerHTML = "Overall Article Sentiment: Very Positive";
             }            
             break;
         case 2:
-            console.log("Summary");
             updateSummaryText(content.sm_api_content);
             break;
         case 3:
             console.log(content);
+            similar_articles = content.filter(Boolean);
+            for(var i = 0; i < similar_articles.length; i++) {
+              similar_articles[i] = {"name": similar_articles[i].title, "url": similar_articles[i].url}
+            }
+            console.log(similar_articles)
+            addNextArticles(similar_articles)
             break;
     }
 }
 
 function createParagraph(general_sentiment, content) {
-  console.log(general_sentiment);
   var color = "white";
 
   if (general_sentiment == "negative") {
@@ -218,8 +223,8 @@ function createParagraph(general_sentiment, content) {
   function addNextArticles(articles) {
     var content = "";
     for (var i = 0; i < articles.length; i++) {
-      content+= "<a href='" + articles[i].url + "'><li class='mdl-list__item'>"
-        + articles[i].name + "</li></a>\n"
+      content+= "<u><a href='" + articles[i].url + "'><li class='mdl-list__item'>"
+        + articles[i].name + "</li></a></u>\n"
     }
     document.getElementById("suggestedArticlesContainer").innerHTML = content
   }
@@ -232,6 +237,7 @@ function createParagraph(general_sentiment, content) {
     console.log(window.location.href);
 
     if(window.location.href.indexOf("chrome-extension://") != 0) {
+      addNextArticles([{name: "Loading articles...", url: "#"}]);
       analyze_article(window.location, callback, true);
     } else {
       document.getElementById("switch-reader").remove();
