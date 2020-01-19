@@ -84,8 +84,12 @@ fetch(url)
           }
         });
       }
-      document.getElementById("options-button").addEventListener('click', function(){
-        chrome.tabs.create({ 'url': chrome.runtime.getURL('options.html') });
+      document.getElementById("options-button").addEventListener('click', () => {
+        if (chrome.runtime.openOptionsPage) {
+          chrome.runtime.openOptionsPage();
+        } else {
+          window.open(chrome.runtime.getURL('options.html'));
+        }
       });
 
       chrome.storage.sync.get(['color_scheme'], function(result) {
