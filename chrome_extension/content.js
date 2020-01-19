@@ -55,6 +55,10 @@ page_content.style.minHeight = '100vh';
 var page = "original";
 var theme = "default";
 
+particlesJS.load('particles-js', 'particles.json', function() {
+  console.log('callback - particles.js config loaded');
+});
+
 /**
  * Get the html for a the contents of the sidebar and then load it into the sidebar
  */
