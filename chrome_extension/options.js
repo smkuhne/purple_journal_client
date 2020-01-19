@@ -1,21 +1,26 @@
-// Copyright 2018 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
-'use strict';
-
-let page = document.getElementById('buttonDiv');
-const kButtonColors = ['#3aa757', '#e8453c', '#f9bb2d', '#4688f1'];
-function constructOptions(kButtonColors) {
-  for (let item of kButtonColors) {
-    let button = document.createElement('button');
-    button.style.backgroundColor = item;
-    button.addEventListener('click', function() {
-      chrome.storage.sync.set({color: item}, function() {
-        console.log('color is ' + item);
-      })
-    });
-    page.appendChild(button);
-  }
+function showCurrent() {
+  chrome.storage.sync.get(['color_scheme', 'sidebar_width', 'sidebar_font_size'], function(result) {
+    console.log(result.color_scheme)
+    console.log("width " + result.sidebar_width)
+    console.log("text " + result.sidebar_font_size)
+    document.getElementsByName("sidebar_width")[0].value = result.sidebar_width
+    document.getElementsByName("sidebar_font_size")[0].value = result.sidebar_font_size          
+    document.getElementById(result.color_scheme).checked = true;
+  });
 }
-constructOptions(kButtonColors);
+
+function doThing() {
+  var object = {color_scheme: "default", sidebar_width: 100, sidebar_font_size: 100}
+  object.color_scheme = document.querySelector("input[name=color_scheme]:checked").value    
+  object.sidebar_font_size = document.getElementsByName("sidebar_font_size")[0].value 
+  object.sidebar_width = document.getElementsByName("sidebar_width")[0].value
+  console.log(object.color_scheme)
+  console.log("width " + object.sidebar_width)
+  console.log("text " + object.sidebar_font_size)
+  chrome.storage.sync.set(object)
+}
+
+showCurrent()
+document.getElementById("buttonThatSaves").addEventListener("click", doThing)
+
+
