@@ -14,12 +14,15 @@ var page_original = "";
 sidebar_element = document.createElement('div');
 sidebar_content = document.createElement('div');
 sidebar_slider = document.createElement('div');
+sidebar_slider_img = document.createElement('img');
 page_content = document.createElement('div');
 sidebar_content.setAttribute('id', 'purple-sidebar');
 sidebar_slider.setAttribute('id', 'purple-slider');
 sidebar_element.setAttribute('class', 'purple-sidebar purple-sidebar-retracted');
 sidebar_content.setAttribute('class', 'purple-content');
 sidebar_slider.setAttribute('class', 'purple-slider');
+sidebar_slider_img.setAttribute('src', chrome.runtime.getURL('images/get_started19_white.png'));
+sidebar_slider_img.setAttribute('id', 'arrow');
 page_content.innerHTML = document.body.innerHTML;
 page_original = page_content.innerHTML;
 document.body.innerHTML = "";
@@ -27,7 +30,7 @@ sidebar_element.appendChild(sidebar_content);
 sidebar_element.appendChild(sidebar_slider);
 document.body.appendChild(sidebar_element);
 document.body.appendChild(page_content);
-sidebar_slider.innerHTML = arrow;
+sidebar_slider.appendChild(sidebar_slider_img);
 document.getElementById('arrow').setAttribute('class', 'arrow');
 
 var custom_reader = document.createElement('div');
@@ -45,20 +48,24 @@ fetch(url)
         start();
     })
     .then(() => {
-      console.log('listener');
-      document.getElementById("switch-reader").style.display = 'none';
-      document.getElementById("switch-reader").addEventListener('click', function(){
-        console.log('click');
-        if (page == "original") {
-          page_content.innerHTML = "";
-          page_content.appendChild(custom_reader);
-          console.log('custom');
-          page = "custom";
-        } else if (page == "custom") {
-          page_content.innerHTML = page_original;
-          console.log('original');
-          page = "original";
-        }
+      document.getElementById("logo").setAttribute('src', chrome.runtime.getURL('images/Landing_Page_Logo_White.png'));
+      if (document.getElementById("switch-reader")) {
+        document.getElementById("switch-reader").style.display = 'none';
+        document.getElementById("switch-reader").addEventListener('click', function(){
+          if (page == "original") {
+            page_content.innerHTML = "";
+            page_content.appendChild(custom_reader);
+            console.log('custom');
+            page = "custom";
+          } else if (page == "custom") {
+            page_content.innerHTML = page_original;
+            console.log('original');
+            page = "original";
+          }
+        });
+      }
+      document.getElementById("options-button").addEventListener('click', function(){
+        chrome.tabs.create({ 'url': chrome.runtime.getURL('options.html') });
       });
     });
 
@@ -66,11 +73,11 @@ fetch(url)
  * Upon pressing the slider, expand or retract based on current state
  */
 document.getElementById("purple-slider").addEventListener("click", function(){
-    if (sidebar_visible) {
+    if (sidebar_visible && page == "original") {
         sidebar_visible = !sidebar_visible;
         sidebar_element.setAttribute('class', 'purple-sidebar purple-sidebar-retracted');
         document.getElementById('arrow').setAttribute('class', 'arrow');
-    } else {
+    } else if (page == "original") {
         sidebar_visible = !sidebar_visible;
         sidebar_element.setAttribute('class', 'purple-sidebar');
         document.getElementById('arrow').setAttribute('class', 'arrow arrow-retracted');
@@ -87,8 +94,9 @@ function callback(stage, content) {
             var content_text = "";
 
             var header = document.createElement('h4');
-            header.setAttribute('style', 'margin: 30px')
+            header.setAttribute('style', 'padding: 30px; margin: 0px; background-color: #7a32b2; color: white')
             var splitter = document.createElement('hr');
+            splitter.setAttribute('style', 'margin: 0px;')
             header.innerHTML = document.title;
             custom_reader.appendChild(header);
             custom_reader.appendChild(splitter);
@@ -251,6 +259,10 @@ function createParagraph(general_sentiment, content) {
         ]
         addNextArticles(items);
     }
+  }
+
+  function options() {
+    chrome.tabs.create({ 'url': 'chrome:\/\/extensions/?options=' + chrome.runtime.id })
   }
 
 

@@ -1,21 +1,33 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <style>
-      button {
-        height: 30px;
-        width: 30px;
-        outline: none;
-        margin: 10px;
-      }
-    </style>
+  
+  <title>Purple Journal Options</title>
   </head>
   <body>
-    <div id="buttonDiv">
+    <div id="optionOnload">
+      <h2> Welcome to Purple Journal settings </h2>
+      
+        <h4>Select your preferred color scheme</h4>
+        <input type="radio" name="color_scheme"
+                            id="default" value="default" /> Default(Dark)<br />
+        <input type="radio" name="color_scheme"
+                            id="light" value="light" /> Light <br />
+        <input type="radio" name="color_scheme"
+                            id="greyscale" value="greyscale" />Accessible<br />
+        <h4>Select your perferred sidebar width(in percent relative to the
+          original size)</h4>
+        <input type="number" name="sidebar_width" min="50" max="200" step="25"
+        />
+        <h4>Select your perferred sidebar font size(in percent relative to the
+          original size)</h4>
+        <input type="number" name="sidebar_font_size" min="50" max="200"
+        step="25" /> 
+        <br />
+       
+       <button id="buttonThatSaves" >Save Status</button>
     </div>
-    <div>
-      <p>Choose a different background color!</p>
-    </div>
+    <script src="options.js" />
+  </script>
   </body>
-  <script src="options.js"></script>
 </html>

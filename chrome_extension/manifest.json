@@ -45,7 +45,10 @@
  ],
  "web_accessible_resources": [
     "html/*.html",
+    "options.html",
     "images/Landing_Page_Logo.png",
+    "images/Landing_Page_Logo_White.png",
+    "images/get_started19_white.png",
     "images/arrow.png",
     "thirdParty/jquery.min.js",
     "thirdParty/bootstrap.min.js",
