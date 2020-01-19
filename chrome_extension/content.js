@@ -52,6 +52,7 @@ document.getElementById('arrow').setAttribute('class', 'arrow');
 var custom_reader = document.createElement('div');
 custom_reader.setAttribute('style', 'margin-left: 400px');
 var page = "original";
+var theme = "default";
 
 /**
  * Get the html for a the contents of the sidebar and then load it into the sidebar
@@ -88,31 +89,28 @@ fetch(url)
 
       chrome.storage.sync.get(['color_scheme'], function(result) {
         switch(result.color_scheme) {
+          default:
           case 'default':
+            theme = 'default';
             document.getElementById("main-section").setAttribute('style', 'background-color:#32373A !important; color: white !important');
-            var articles = document.getElementsByClassName("mdl-list__item");
-            for (var i = 0; i < articles.length; i++) {
-              articles[i].setAttribute('style', 'color: white !important');
-            }
+            relatedDark();
             custom_reader.setAttribute('style', 'margin-left: 400px; background-color: #FFFFFF; color: #000000');
             break;
           case 'dark':
+            theme = 'dark';
             document.getElementById("main-section").setAttribute('style', 'background-color:#32373A !important; color: white !important');
-            var articles = document.getElementsByClassName("mdl-list__item");
-            for (var i = 0; i < articles.length; i++) {
-              articles[i].setAttribute('style', 'color: white !important');
-            }
+            relatedDark();
             custom_reader.setAttribute('style', 'margin-left: 400px; background-color: #32373A; color: #FFFFFF');
             break;
           case 'light':
+            theme = 'light';
             document.getElementById("main-section").setAttribute('style', "background-color:#FFFFFF !important; color: black !important");
-            var articles = document.getElementsByClassName("mdl-list__item");
-            for (var i = 0; i < articles.length; i++) {
-              articles[i].setAttribute('style', 'color: black !important');
-            }
+            relatedLight();
             sidebar_slider.setAttribute('style', 'filter: invert(1);');
             custom_reader.setAttribute('style', 'margin-left: 400px; background-color: #FFFFFF; color: #000000');
             break;
+          
+
         }
       });
     });
@@ -286,6 +284,12 @@ function createParagraph(general_sentiment, content) {
         + articles[i].name + "</li></a></u>\n"
     }
     document.getElementById("suggestedArticlesContainer").innerHTML = content
+
+    if (theme == 'dark' || theme == 'default') {
+      relatedDark();
+    } else {
+      relatedLight();
+    }
   }
 
   function start() {
@@ -309,6 +313,20 @@ function createParagraph(general_sentiment, content) {
         {name:"Example link #3", url: "#"}
         ]
         addNextArticles(items);
+    }
+  }
+
+  function relatedDark() {
+    var articles = document.getElementsByClassName("mdl-list__item");
+    for (var i = 0; i < articles.length; i++) {
+      articles[i].setAttribute('style', 'color: white !important');
+    }
+  }
+
+  function relatedLight() {
+    var articles = document.getElementsByClassName("mdl-list__item");
+    for (var i = 0; i < articles.length; i++) {
+      articles[i].setAttribute('style', 'color: black !important');
     }
   }
 

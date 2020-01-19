@@ -21,6 +21,7 @@ function summary(text, done) {
 }
 
 function get_related(keywords, done, base_url) {
+  console.log("Getting related articles")
   const Http = new XMLHttpRequest();
   keys = ["35f35e5d26cb4c80bf48079d5099a335", "56a6a3896f8c480a8dc4c08177f1f9f3", "ec85280265c142c88dec10bc1c0cb747"]
   var random = keys[Math.floor(Math.random()*keys.length)];
@@ -39,6 +40,7 @@ function get_related(keywords, done, base_url) {
       var most_nut = undefined;
 
       let count = Math.min(9, news_obj.totalResults - 1);
+      console.log(news_obj.totalResults);
 
       if(count == -1) {
         addNextArticles([{"name": "We couldn't find any articles similar to this.", "url": "#"}]);
@@ -80,6 +82,7 @@ function get_related(keywords, done, base_url) {
         }, false, i);
       }
     } else if (this.status == 200) {
+      console.log(Http.responseText);
       done(-1)
     }
   }
