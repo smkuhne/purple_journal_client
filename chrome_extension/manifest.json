@@ -10,10 +10,36 @@
   },
    "content_scripts": [
    {
-     "matches": ["https://*.nytimes.com/*"],
-     "css": ["styles.css"],
-     "js": ["content.js"],
-     "run_at": "document_idle"
+     "matches": [
+     	"https://*.nytimes.com/*", 
+     	"https://*.cnn.com/*",
+     	"https://*.huffpost.com/*",
+     	"https://*.foxnews.com/*",
+     	"https://*.usatoday.com/*",
+     	"https://*.reuters.com/*",
+    	"https://*.politico.com/*",
+    	"https://*.npr.org/*",
+    	"https://*.latimes.com/*",
+    	"https://*.breirbart.com/*",
+    	"https://*.nypost.com/*",
+    	"https://*.nbcnews.com/*",
+    	"https://*.cbsnews.com/*",
+    	"https://abcnews.go.com/*",
+    	"https://*.cbslocal.com/*",
+    	"https://*.newsweek.com/*",
+    	"https://*.nydailynews.com/*",
+    	"https://*.chicagotribune.com/*",
+    	"https://*.denverpost.com/*",
+    	"https://*.newsmax.com/*",
+    	"https://*.seatletimes.com/*",
+    	"https://*.newsday.com/*",
+    	"https://*.kcra.com/*",
+    	"https://*.fox40.com/*",
+    	"https://*.abc10.com/*",
+    	"https://*.sacbee.com/*",
+     	],
+     "css": ["myStyles.css"],
+     "js": ["contentScript.js"]
    }
  ],
  "web_accessible_resources": [
