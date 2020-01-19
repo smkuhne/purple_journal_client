@@ -30,9 +30,8 @@ document.body.appendChild(page_content);
 sidebar_slider.innerHTML = arrow;
 document.getElementById('arrow').setAttribute('class', 'arrow');
 
-var custom_reader = document.body.createElement('div');
-
-var original = document.body.innerHTML;
+var custom_reader = document.createElement('div');
+var page = "original";
 
 /**
  * Get the html for a the contents of the sidebar and then load it into the sidebar
@@ -43,6 +42,22 @@ fetch(url)
     .then((sidebar_content) => {
         document.getElementById("purple-sidebar").innerHTML = sidebar_content;
         start();
+    })
+    .then(() => {
+      console.log('listener');
+      document.getElementById("switch-reader").style.display = 'none';
+      document.getElementById("switch-reader").addEventListener('click', function(){
+        console.log('click');
+        if (page == "original") {
+          page_content.innerHTML = custom_reader.innerHTML;
+          console.log('custom');
+          page = "custom";
+        } else if (page == "custom") {
+          page_content.innerHTML = page_original;
+          console.log('original');
+          page = "original";
+        }
+      });
     });
 
 /**
@@ -116,6 +131,10 @@ function callback(stage, content) {
             neutral = Math.round(neutral / total * 100);
             positive = Math.round(positive / total * 100);
             updateSentimentChart(positive, neutral, negative);
+
+            if(document.getElementById("switch-reader")) {
+              document.getElementById("switch-reader").style.display = 'block';
+            }
             break;
         case 2:
             console.log("Summary");
@@ -185,7 +204,7 @@ function createParagraph(general_sentiment, content) {
   }
 
   function addNextArticles(articles) {
-    var content = ""
+    var content = "";
     for (var i = 0; i < articles.length; i++) {
       content+= "<a href='" + articles[i].url + "'><li class='mdl-list__item'>"
         + articles[i].name + "</li></a>\n"
@@ -198,9 +217,12 @@ function createParagraph(general_sentiment, content) {
     updateSentimentChart(0,1,0) // Pos, Neut, Negative
     updateSummaryText("Loading") // Summary string
 
+    console.log(window.location.href);
+
     if(window.location.href.indexOf("chrome-extension://") != 0) {
       analyze_article(window.location, callback, true);
     } else {
+      document.getElementById("switch-reader").remove();
       updateSentimentChart(22, 74, 4);
       updateSummaryText("When browsing your favorite news sites, this tab will show you: a summary of the article, and whether the article takes a positive, negative, or neutral approach to the topic. Additionally, it will display suggested further readings relating to the topic in the article.");
     
@@ -209,8 +231,8 @@ function createParagraph(general_sentiment, content) {
         {name:"Example link #2", url: "#"},
         {name:"Example link #3", url: "#"}
         ]
+        addNextArticles(items);
     }
-    addNextArticles(items);
   }
 
 
