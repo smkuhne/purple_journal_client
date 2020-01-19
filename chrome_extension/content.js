@@ -61,7 +61,6 @@ document.getElementById("purple-slider").addEventListener("click", function(){
 function callback(stage, content) {
     switch(stage) {
         case 1:
-            console.log('Sentiment');
             var negative = 0;
             var neutral = 0;
             var positive = 0;
@@ -69,8 +68,6 @@ function callback(stage, content) {
             var content_text = "";
 
             page_content.innerHTML = "";
-
-            console.log(content);
 
             for (let i = 0; i < content.sentiments.sentences.length; i++) {
               if (content.sentiments.sentences[i].sentiment.score < -0.25) {
@@ -115,12 +112,17 @@ function callback(stage, content) {
             break;
         case 3:
             console.log(content);
+            similar_articles = content.filter(Boolean);
+            for(var i = 0; i < similar_articles.length; i++) {
+              similar_articles[i] = {"name": similar_articles[i].title, "url": similar_articles[i].url}
+            }
+            console.log(similar_articles)
+            addNextArticles(similar_articles)
             break;
     }
 }
 
 function createParagraph(general_sentiment, content) {
-  console.log(general_sentiment);
   var color = "white";
 
   if (general_sentiment == "negative") {
@@ -174,8 +176,8 @@ function createParagraph(general_sentiment, content) {
   function addNextArticles(articles) {
     var content = ""
     for (var i = 0; i < articles.length; i++) {
-      content+= "<a href='" + articles[i].url + "'><li class='mdl-list__item'>"
-        + articles[i].name + "</li></a>\n"
+      content+= "<u><a href='" + articles[i].url + "'><li class='mdl-list__item'>"
+        + articles[i].name + "</li></a></u>\n"
     }
     document.getElementById("suggestedArticlesContainer").innerHTML = content
   }
@@ -186,6 +188,7 @@ function createParagraph(general_sentiment, content) {
     updateSummaryText("Loading") // Summary string
 
     if(window.location.href.indexOf("chrome-extension://") != 0) {
+      addNextArticles([{name: "Loading articles...", url: "#"}]);
       analyze_article(window.location, callback, true);
     } else {
       updateSentimentChart(22, 74, 4);
@@ -196,8 +199,8 @@ function createParagraph(general_sentiment, content) {
         {name:"Example link #2", url: "#"},
         {name:"Example link #3", url: "#"}
         ]
+        addNextArticles(items);
     }
-    addNextArticles(items);
   }
 
 
