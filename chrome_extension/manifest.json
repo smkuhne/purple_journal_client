@@ -36,15 +36,19 @@
     	"https://*.kcra.com/*",
     	"https://*.fox40.com/*",
     	"https://*.abc10.com/*",
-    	"https://*.sacbee.com/*"
+      "https://*.sacbee.com/*"
      	],
-     "css": ["styles.css"],
+     "css": ["styles.css", "thirdParty/animate.css"],
      "js": ["HelloWorld.js", "thirdParty/canvasjs.min.js", "thirdParty/jquery.min.js", "content.js"],
      "run_at": "document_idle"
    }
  ],
  "web_accessible_resources": [
-    "html/*.html"
+    "html/*.html",
+    "images/Landing_Page_Logo.png",
+    "thirdParty/jquery.min.js",
+    "thirdParty/bootstrap.min.js",
+    "thirdParty/bootstrap.min.css"
   ],
   "page_action": {
     "default_popup": "popup.html",
