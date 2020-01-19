@@ -5,7 +5,8 @@ console.log("Now loading purple journal extension.");
  * Define some required constants
  */
 var arrow = '<svg id="arrow" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path stroke="white" d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/><path fill="none" d="M0 0h24v24H0V0z"/></svg>';
-var sidebar_visible = true;
+var sidebar_visible = false;
+var page_original = "";
 
 /**
  * Sets up the sidebar structure and appends classes and information
@@ -13,16 +14,23 @@ var sidebar_visible = true;
 sidebar_element = document.createElement('div');
 sidebar_content = document.createElement('div');
 sidebar_slider = document.createElement('div');
+page_content = document.createElement('div');
 sidebar_content.setAttribute('id', 'purple-sidebar');
 sidebar_slider.setAttribute('id', 'purple-slider');
-sidebar_element.setAttribute('class', 'purple-sidebar');
+sidebar_element.setAttribute('class', 'purple-sidebar purple-sidebar-retracted');
 sidebar_content.setAttribute('class', 'purple-content');
 sidebar_slider.setAttribute('class', 'purple-slider');
+page_content.innerHTML = document.body.innerHTML;
+page_original = page_content.innerHTML;
+document.body.innerHTML = "";
 sidebar_element.appendChild(sidebar_content);
 sidebar_element.appendChild(sidebar_slider);
 document.body.appendChild(sidebar_element);
+document.body.appendChild(page_content);
 sidebar_slider.innerHTML = arrow;
 document.getElementById('arrow').setAttribute('class', 'arrow arrow-retracted');
+
+var original = document.body.innerHTML;
 
 /**
  * Get the html for a the contents of the sidebar and then load it into the sidebar
@@ -55,76 +63,87 @@ analyze_article(window.location, callback, true);
 function callback(stage, content) {
     switch(stage) {
         case 1:
+            console.log('Sentiment');
             var negative = 0;
             var neutral = 0;
             var positive = 0;
+            var general_sentiment = "none";
+            var content_text = "";
+
+            page_content.innerHTML = "";
+
+            console.log(content);
+
             for (let i = 0; i < content.sentiments.sentences.length; i++) {
-                if (content.sentiments.sentences[i].sentiment.score < -0.25) {
-                    negative += content.sentiments.sentences[i].sentiment.magnitude;
-                } else if (content.sentiments.sentences[i].sentiment.score > 0.25) {
-                    positive += content.sentiments.sentences[i].sentiment.magnitude;
+              if (content.sentiments.sentences[i].sentiment.score < -0.25) {
+                negative += content.sentiments.sentences[i].sentiment.magnitude;
+                if (general_sentiment === "negative") {
+                  content_text += content.sentiments.sentences[i].text.content;
                 } else {
-                    neutral += content.sentiments.sentences[i].sentiment.magnitude; 
+                  createParagraph(general_sentiment, content_text);
+                  content_text = "";
                 }
+                general_sentiment = "negative";
+              } else if (content.sentiments.sentences[i].sentiment.score > 0.25) {
+                positive += content.sentiments.sentences[i].sentiment.magnitude;
+                if (general_sentiment === "positive") {
+                  content_text += content.sentiments.sentences[i].text.content;
+                } else {
+                  createParagraph(general_sentiment, content_text);
+                  content_text = "";
+                }
+                general_sentiment = "positive";
+              } else {
+                neutral += content.sentiments.sentences[i].sentiment.magnitude; 
+                if (general_sentiment === "neutral") {
+                  content_text += content.sentiments.sentences[i].text.content;
+                } else {
+                  createParagraph(general_sentiment, content_text);
+                  content_text = "";
+                }
+                general_sentiment = "neutral";
+              }
             }
+
             var total = negative + neutral + positive;
             negative = Math.round(negative / total * 100);
             neutral = Math.round(neutral / total * 100);
             positive = Math.round(positive / total * 100);
             updateSentimentChart(positive, neutral, negative);
-
-            var items = document.body.getElementsByTagName("p");
-            var i = 0;
-
-
-            while (i < content.sentiments.sentences.length) {
-                for (let j = 0; j < items.length; j++) {
-                    var sentiment = 0;
-                    var num = 0;
-
-                    if (items[j].textContent.indexOf(content.sentiments.sentences[i].text.content) == -1) {
-                        continue;
-                    }
-
-                    while (items[j].textContent.indexOf(content.sentiments.sentences[i].text.content) != -1) {
-                        sentiment += content.sentiments.sentences[i].sentiment.score;
-                        num++;
-                        i++;
-                    }
-
-                    var averageSentiment = sentiment / num;
-                    var color = "white";
-
-                    if (averageSentiment < -0.25) {
-                        color = "#de647c";
-                    } else if (averageSentiment > 0.25) {
-                        color = "#6b97e8";
-                    } else {
-                        color = "#9d5edb";
-                    }
-
-                    var container = document.createElement('div');
-                    container.setAttribute('style', 'display: flex; flex-direction: row; width: 100%')
-                    var bar = document.createElement('div');
-                    bar.setAttribute('style', `background-color:${color}; min-width: 10px !important; height: 100%; display: block; margin-right: 5px;border-radius: 5px`);
-                    var inner = document.createElement('div');
-                    inner.setAttribute('style', 'display: block');
-                    inner.innerHTML = items[i].innerHTML;
-                    container.appendChild(bar);
-                    container.appendChild(inner);
-                    items[i].innerHTML = '';
-                    items[i].prepend(container);
-                    bar.style.height = `${inner.clientHeight}px`;
-                }
-            }
             break;
         case 2:
+            console.log("Summary");
             updateSummaryText(content.sm_api_content);
             break;
         case 3:
             console.log(content);
             break;
     }
+}
+
+function createParagraph(general_sentiment, content) {
+  console.log(general_sentiment);
+  var color = "white";
+
+  if (general_sentiment == "negative") {
+    color = "#de647c";
+  } else if (general_sentiment == "positive") {
+    color = "#6b97e8";
+  } else {
+    color = "#9d5edb";
+  }
+
+  var container = document.createElement('div');
+  container.setAttribute('style', 'display: flex; flex-direction: row; width: 100%')
+  var bar = document.createElement('div');
+  bar.setAttribute('style', `background-color:${color}; min-width: 10px !important; height: 100%; display: block; margin-right: 5px;border-radius: 5px`);
+  var inner = document.createElement('div');
+  inner.setAttribute('style', 'display: block');
+  inner.innerHTML = content;
+  container.appendChild(bar);
+  container.appendChild(inner);
+  page_content.appendChild(container);
+  bar.style.height = `${inner.clientHeight}px`;
 }
 
 function updateBiasChart( factual, opinion) {
