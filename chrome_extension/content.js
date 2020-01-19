@@ -28,7 +28,9 @@ sidebar_element.appendChild(sidebar_slider);
 document.body.appendChild(sidebar_element);
 document.body.appendChild(page_content);
 sidebar_slider.innerHTML = arrow;
-document.getElementById('arrow').setAttribute('class', 'arrow arrow-retracted');
+document.getElementById('arrow').setAttribute('class', 'arrow');
+
+var custom_reader = document.body.createElement('div');
 
 var original = document.body.innerHTML;
 
@@ -70,9 +72,12 @@ function callback(stage, content) {
             var general_sentiment = "none";
             var content_text = "";
 
-            page_content.innerHTML = "";
-
-            console.log(content);
+            var header = document.createElement('h4');
+            header.setAttribute('style', 'margin: 30px')
+            var splitter = document.createElement('hr');
+            header.innerHTML = document.title;
+            custom_reader.appendChild(header);
+            custom_reader.appendChild(splitter);
 
             for (let i = 0; i < content.sentiments.sentences.length; i++) {
               if (content.sentiments.sentences[i].sentiment.score < -0.25) {
@@ -82,6 +87,7 @@ function callback(stage, content) {
                 } else {
                   createParagraph(general_sentiment, content_text);
                   content_text = "";
+                  content_text += content.sentiments.sentences[i].text.content;
                 }
                 general_sentiment = "negative";
               } else if (content.sentiments.sentences[i].sentiment.score > 0.25) {
@@ -91,6 +97,7 @@ function callback(stage, content) {
                 } else {
                   createParagraph(general_sentiment, content_text);
                   content_text = "";
+                  content_text += content.sentiments.sentences[i].text.content;
                 }
                 general_sentiment = "positive";
               } else {
@@ -100,6 +107,7 @@ function callback(stage, content) {
                 } else {
                   createParagraph(general_sentiment, content_text);
                   content_text = "";
+                  content_text += content.sentiments.sentences[i].text.content;
                 }
                 general_sentiment = "neutral";
               }
@@ -129,21 +137,26 @@ function createParagraph(general_sentiment, content) {
     color = "#de647c";
   } else if (general_sentiment == "positive") {
     color = "#6b97e8";
-  } else {
+  } else if (general_sentiment == "neutral") {
     color = "#9d5edb";
+  } else {
+    return;
   }
 
+  var outer_container = document.createElement('div')
+  outer_container.setAttribute('style', 'display: block; margin: 40px; width: calc(100% - 80px);')
   var container = document.createElement('div');
-  container.setAttribute('style', 'display: flex; flex-direction: row; width: 100%')
+  container.setAttribute('style', 'display: table-row; padding: 10px')
   var bar = document.createElement('div');
-  bar.setAttribute('style', `background-color:${color}; min-width: 10px !important; height: 100%; display: block; margin-right: 5px;border-radius: 5px`);
+  bar.setAttribute('style', `background-color:${color}; display: table-cell; min-width: 10px !important; height: 100%; margin-right: 5px;border-radius: 5px`);
   var inner = document.createElement('div');
-  inner.setAttribute('style', 'display: block');
+  inner.setAttribute('style', 'font-size: 1.25rem; display: table-cell; padding: 10px');
   inner.innerHTML = content;
   container.appendChild(bar);
   container.appendChild(inner);
-  page_content.appendChild(container);
-  bar.style.height = `${inner.clientHeight}px`;
+  outer_container.appendChild(container);
+  custom_reader.appendChild(outer_container);
+  bar.style.height = `100%`;
 }
 
 function updateBiasChart( factual, opinion) {
