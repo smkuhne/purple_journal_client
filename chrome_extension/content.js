@@ -79,6 +79,9 @@ document.getElementById("purple-slider").addEventListener("click", function(){
 
 function callback(stage, content) {
     switch(stage) {
+        case -1:
+            updateSummaryText("Uh no! We were not able to analyze this article :c");
+            break;
         case 1:
             var negative = 0;
             var neutral = 0;
@@ -231,7 +234,7 @@ function createParagraph(general_sentiment, content) {
 
   function start() {
     console.log("hey");
-    updateSentimentChart(0,1,0) // Pos, Neut, Negative
+    updateSentimentChart(0,0,0) // Pos, Neut, Negative
     updateSummaryText("Loading") // Summary string
 
     console.log(window.location.href);
