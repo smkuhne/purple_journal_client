@@ -2,7 +2,7 @@
   "name": "Purple Journal",
   "version": "1.0",
   "description": "Check your news",
-  "permissions": ["activeTab", "declarativeContent", "storage"],
+  "permissions": ["activeTab", "declarativeContent", "storage", "tabs"],
   "options_page": "options.html",
   "background": {
     "scripts": ["background.js"],
@@ -10,11 +10,15 @@
   },
    "content_scripts": [
    {
-     "matches": ["http://*.nytimes.com/*", ],
-     "css": ["myStyles.css"],
-     "js": ["contentScript.js"]
+     "matches": ["https://*.nytimes.com/*"],
+     "css": ["styles.css"],
+     "js": ["content.js"],
+     "run_at": "document_idle"
    }
  ],
+ "web_accessible_resources": [
+    "html/*.html"
+  ],
   "page_action": {
     "default_popup": "popup.html",
     "default_icon": {

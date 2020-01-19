@@ -17,3 +17,17 @@ chrome.runtime.onInstalled.addListener(function() {
     }]);
   });
 });
+
+chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
+  chrome.runtime.getPackageDirectoryEntry(function(root) {
+    root.getFile(request.cmd, {}, function(fileEntry) {
+      fileEntry.file(function(file) {
+        var reader = new FileReader();
+        reader.onloadend = function(e) {
+
+        };
+        console.log(reader.readAsText(file));
+      });
+    });
+  });
+});
