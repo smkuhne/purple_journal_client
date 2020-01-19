@@ -58,8 +58,6 @@ document.getElementById("purple-slider").addEventListener("click", function(){
     }
 });
 
-analyze_article(window.location, callback, true);
-
 function callback(stage, content) {
     switch(stage) {
         case 1:
@@ -146,28 +144,6 @@ function createParagraph(general_sentiment, content) {
   bar.style.height = `${inner.clientHeight}px`;
 }
 
-function updateBiasChart( factual, opinion) {
-    var chart = new CanvasJS.Chart("biasChartContainer", {
-      theme: "dark2", 
-      exportEnabled: false,
-      animationEnabled: true,
-      title: {
-        text: "This Article is approximately"
-      },
-      data: [{
-        type: "pie",
-        startAngle: -90,
-        toolTipContent: "<b>{label}</b>: {y}",
-        showInLegend: "true",
-        legendText: "{label}",
-        indexLabelFontSize: 16,
-        indexLabel: "{label}",
-        dataPoints: [{y: factual, label:"factual"}, {y: opinion, label:"opinion"}]
-      }]
-    });
-    chart.render();
-  }
-
   function updateSentimentChart(positive, neutral, negative) {
     var chart = new CanvasJS.Chart("sentimentChartContainer", {
       theme: "dark2", 
@@ -206,9 +182,16 @@ function updateBiasChart( factual, opinion) {
 
   function start() {
     console.log("hey");
-    updateBiasChart(1,0) // Factual, Opinion
     updateSentimentChart(0,1,0) // Pos, Neut, Negative
     updateSummaryText("Loading") // Summary string
+
+    if(window.location.href.indexOf("chrome-extension://") != 0) {
+      analyze_article(window.location, callback, true);
+    } else {
+      updateSentimentChart(40, 20, 40);
+      updateSummaryText("When browsing your favorite news sites, this tab will show you: a summary of the article, and whether the article takes a positive, negative, or neutral approach to the topic. Additionally, it will display suggested further readings relating to the topic in the article.");
+    }
+
     var items = [
       {name:"CNN", url: "https://www.cnn.com"},
       {name:"New York Times", url: "https://www.nytimes.com"},

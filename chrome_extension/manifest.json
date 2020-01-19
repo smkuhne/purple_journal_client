@@ -46,6 +46,7 @@
  "web_accessible_resources": [
     "html/*.html",
     "images/Landing_Page_Logo.png",
+    "images/arrow.png",
     "thirdParty/jquery.min.js",
     "thirdParty/bootstrap.min.js",
     "thirdParty/bootstrap.min.css"
