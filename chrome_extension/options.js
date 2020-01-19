@@ -18,6 +18,9 @@ function doThing() {
   //console.log("width " + object.sidebar_width)
   //console.log("text " + object.sidebar_font_size)
   chrome.storage.sync.set(object)
+  chrome.tabs.getCurrent(function(tab) {
+    chrome.tabs.remove(tab.id, function() { });
+  });
 }
 
 showCurrent()
