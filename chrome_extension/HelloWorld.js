@@ -39,15 +39,29 @@ function get_related(keywords, done, base_url) {
       var most_nut = undefined;
 
       let count = Math.min(9, news_obj.totalResults - 1);
-      function recurse_articles() {
-        if( count == 0 ) {
-          done(most_neg, most_nut, most_pos)
+
+      if(count == -1) {
+        addNextArticles([{"name": "We couldn't find any articles similar to this.", "url": "#"}]);
+        return
+      }
+
+      function onFinishedArticle() {
+        count -= 1;
+        if(count == 0) {
+          done(most_neg, most_nut, most_pos);
         }
-        var current = news_obj.articles[count];
-        if(current.url !== undefined) {
-          analyze_article(current.url, (stage, content) => {
+      }
+
+      for(var i = 0; i < count; i++) {
+        analyze_article(news_obj.articles[i].url, (stage, content, j) => {
+          if(stage == -1) {
+            onFinishedArticle();
+            return;
+          }
+            var current = news_obj.articles[j];
             current.document_score = content.document_score;
             current.document_magnitude = content.document_magnitude;
+
             if (current.url != base_url && stage == 1) {
               if (most_neg === undefined) {
                 most_neg = current;
@@ -62,17 +76,11 @@ function get_related(keywords, done, base_url) {
                 most_nut = current;
               } 
             }
-            count -= 1;
-            recurse_articles()
-
-          }, false);
-        } else {
-          // If there is no url. Go to the next article
-          count -= 1;
-          recurse_articles();
-        }
+            onFinishedArticle();
+        }, false, i);
       }
-    recurse_articles();
+    } else if (this.status == 200) {
+      done(-1)
     }
   }
 }
@@ -83,7 +91,7 @@ function get_related(keywords, done, base_url) {
  * @param {*} done function(stage, content) content depends on stage, stage 1 sentiment, stage 2 summary, stage 3 related
  * @param {*} do_related must be true don't question it
  */
-function analyze_article(url, done, do_related) {
+function analyze_article(url, done, do_related, pass_thru) {
   if (do_related === undefined) {
     do_related = false;
   }
@@ -113,7 +121,7 @@ function analyze_article(url, done, do_related) {
       Http2.onreadystatechange = function() {
         if(this.readyState==4 && this.status==200) {
           var sentiment_obj = JSON.parse(Http2.responseText)
-          done(1, sentiment_obj);
+          done(1, sentiment_obj, pass_thru);
           var key_terms = [];
           for (var i = 0; i < 4; i++) {
             if (sentiment_obj.entities[i] === undefined) {
@@ -123,9 +131,15 @@ function analyze_article(url, done, do_related) {
           }
           if (do_related) {
             get_related(key_terms, (most_neg, most_nut, most_pos) => {
-              done(3, [most_neg, most_nut, most_pos]);
+              if(most_neg === -1) {
+                done(3, [undefined, undefined, undefined]);
+              } else {
+                done(3, [most_neg, most_nut, most_pos]);
+              }
             }, base_url);
           }
+        } else if(this.readyState==4) {
+          done(-1)
         }
       }
       if (do_related) {
@@ -133,6 +147,8 @@ function analyze_article(url, done, do_related) {
           done(2, result);
         })
       }
+    } else if (this.readyState==4) {
+      done(-1)
     }
   }
 }
