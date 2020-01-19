@@ -31,3 +31,19 @@ Split(["#sidebar", "#webpage"], {
   gutterSize: 5,
   sizes: [20,80]
 });
+
+var items = document.body.getElementsByTagName("*");
+for (var i = 0; i < items.length; i++) {
+    console.log(items[i].textContent);
+    var container = document.createElement('div');
+    container.setAttribute('style', 'display: flex; flex-direction: row; width: 100%')
+    var bar = document.createElement('div');
+    bar.setAttribute('style', 'background-color:green; width: 20px; height: 100%; display: inline-flex');
+    var inner = document.createElement('div');
+    inner.setAttribute('style', 'display: block');
+    inner.innerHTML = items[i].innerHTML;
+    container.appendChild(bar);
+    container.appendChild(inner);
+    items[i].innerHTML = '';
+    items[i].prepend(container);
+}
