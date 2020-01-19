@@ -61,12 +61,18 @@ function updateSummaryText(summaryText) {
 }
 
 function addNextArticles(articles) {
-  var content = ""
+  var container = document.getElementById("suggestedArticlesContainer")
   for (var i = 0; i < articles.length; i++) {
-    content+= "<a href='" + articles[i].url + "'><li class='mdl-list__item'>"
-      + articles[i].name + "</li></a>\n"
+    var textNode = document.createTextNode(articles[i].name)
+    var listItem = document.createElement('li')
+    listItem.appendChild(textNode)
+    listItem.className = 'mdl-list__item'
+    //componentHandler.upgradeElement(listItem)
+    var aItem = document.createElement('a')
+    aItem.appendChild(listItem)
+    aItem.setAttribute("href", articles[i].url)
+    container.appendChild(aItem)
   }
-  document.getElementById("suggestedArticlesContainer").innerHTML = content
 }
 
 </script>
@@ -83,19 +89,20 @@ function addNextArticles(articles) {
             <div class="mdl-layout-spacer"></div>
         </header>
         <nav class="demo-navigation mdl-navigation mdl-color--blue-grey-800">
-          <a class="mdl-navigation__link" >Article Summary</a>
-          <div id="summaryTextBox">
-          </div>
+          <a class="mdl-navigation__link" ><b>Article Summary</b><br /><div id="summaryTextBox">
+          </div></a>
+          
           <a class="mdl-navigation__link" ><div id="biasChartContainer" style="height: 300px; width: 100%;"></div>
 </a>
           <a class="mdl-navigation__link"><div id="sentimentChartContainer" style="height: 300px; width: 100%;"></div></a>
           <a class="mdl-navigation__link">
+            <b>Suggested Articles</b><br />
             <ul class="mdl-list" id="suggestedArticlesContainer">
             </ul>
           </a>
         </nav>
       </div>
-      <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+      <script src="js/canvasjs.min.js"></script>
       
   <script>
     updateBiasChart(1,0) // Factual, Opinion
