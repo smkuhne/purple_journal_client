@@ -50,7 +50,8 @@ sidebar_slider.appendChild(sidebar_slider_img);
 document.getElementById('arrow').setAttribute('class', 'arrow');
 
 var custom_reader = document.createElement('div');
-custom_reader.setAttribute('style', 'margin-left: 400px');
+custom_reader.setAttribute('style', 'margin-left: 400px; minimum-height: 100vh');
+page_content.style.minHeight = '100vh';
 var page = "original";
 var theme = "default";
 
@@ -92,18 +93,21 @@ fetch(url)
           default:
           case 'default':
             theme = 'default';
+            document.body.style.backgroundColor = '#FFFFFF';
             document.getElementById("main-section").setAttribute('style', 'background-color:#32373A !important; color: white !important');
             relatedDark();
             custom_reader.setAttribute('style', 'margin-left: 400px; background-color: #FFFFFF; color: #000000');
             break;
           case 'dark':
             theme = 'dark';
+            document.body.style.backgroundColor = '#32373A';
             document.getElementById("main-section").setAttribute('style', 'background-color:#32373A !important; color: white !important');
             relatedDark();
             custom_reader.setAttribute('style', 'margin-left: 400px; background-color: #32373A; color: #FFFFFF');
             break;
           case 'light':
             theme = 'light';
+            document.body.style.backgroundColor = '#FFFFFF';
             document.getElementById("main-section").setAttribute('style', "background-color:#FFFFFF !important; color: black !important");
             relatedLight();
             sidebar_slider.setAttribute('style', 'filter: invert(1);');
