@@ -10,7 +10,34 @@
   },
    "content_scripts": [
    {
-     "matches": ["https://*.nytimes.com/*"],
+     "matches": [
+     	"https://*.nytimes.com/*", 
+     	"https://*.cnn.com/*",
+     	"https://*.huffpost.com/*",
+     	"https://*.foxnews.com/*",
+     	"https://*.usatoday.com/*",
+     	"https://*.reuters.com/*",
+    	"https://*.politico.com/*",
+    	"https://*.npr.org/*",
+    	"https://*.latimes.com/*",
+    	"https://*.breirbart.com/*",
+    	"https://*.nypost.com/*",
+    	"https://*.nbcnews.com/*",
+    	"https://*.cbsnews.com/*",
+    	"https://abcnews.go.com/*",
+    	"https://*.cbslocal.com/*",
+    	"https://*.newsweek.com/*",
+    	"https://*.nydailynews.com/*",
+    	"https://*.chicagotribune.com/*",
+    	"https://*.denverpost.com/*",
+    	"https://*.newsmax.com/*",
+    	"https://*.seatletimes.com/*",
+    	"https://*.newsday.com/*",
+    	"https://*.kcra.com/*",
+    	"https://*.fox40.com/*",
+    	"https://*.abc10.com/*",
+    	"https://*.sacbee.com/*"
+     	],
      "css": ["styles.css"],
      "js": ["thirdParty/split.min.js", "content.js"],
      "run_at": "document_idle"
@@ -23,14 +50,18 @@
     "default_popup": "popup.html",
     "default_icon": {
       "16": "images/get_started16.png",
+      "19": "images/get_started19.png",
       "32": "images/get_started32.png",
+      "38": "images/get_started38.png",
       "48": "images/get_started48.png",
       "128": "images/get_started128.png"
     }
   },
   "icons": {
     "16": "images/get_started16.png",
+    "19": "images/get_started19.png",
     "32": "images/get_started32.png",
+    "38": "images/get_started38.png",
     "48": "images/get_started48.png",
     "128": "images/get_started128.png"
   },

@@ -1,37 +1,57 @@
-
+// Lets the console know that purple journal is starting
 console.log("Now loading purple journal extension.");
 
-var sidebar_content = "";
-var webpage_content = document.body.innerHTML;
+/**
+ * Define some required constants
+ */
+var arrow = '<svg id="arrow" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path stroke="white" d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/><path fill="none" d="M0 0h24v24H0V0z"/></svg>';
+var sidebar_visible = true;
 
-document.body.innerHTML = `
-            <div style="display: flex; flex-direction: row">
-                <div id="sidebar"
-                    class="split"
-                    style="min-width: 100px; display: flex; flex-direction: row; background-color: black">
-                    ${sidebar_content}
-                </div>
-                <div id="webpage"
-                    class="split"
-                    style="display: inline-flex; flex-grow: 1">
-                    ${webpage_content}
-                </div>
-            </div>`
+/**
+ * Sets up the sidebar structure and appends classes and information
+ */
+sidebar_element = document.createElement('div');
+sidebar_content = document.createElement('div');
+sidebar_slider = document.createElement('div');
+sidebar_content.setAttribute('id', 'purple-sidebar');
+sidebar_slider.setAttribute('id', 'purple-slider');
+sidebar_element.setAttribute('class', 'purple-sidebar');
+sidebar_content.setAttribute('class', 'purple-content');
+sidebar_slider.setAttribute('class', 'purple-slider');
+sidebar_element.appendChild(sidebar_content);
+sidebar_element.appendChild(sidebar_slider);
+document.body.appendChild(sidebar_element);
+sidebar_slider.innerHTML = arrow;
+document.getElementById('arrow').setAttribute('class', 'arrow arrow-retracted');
 
+/**
+ * Get the html for a the contents of the sidebar and then load it into the sidebar
+ */
 const url = chrome.runtime.getURL('html/sidebar.html');
-
 fetch(url)
     .then((response) => response.text())
     .then((sidebar_content) => {
-        document.getElementById("sidebar").innerHTML = sidebar_content;
-        webpage_content = document.body.innerHTML;
+        document.getElementById("purple-sidebar").innerHTML = sidebar_content;
     });
 
-Split(["#sidebar", "#webpage"], {
-  gutterSize: 5,
-  sizes: [20,80]
+/**
+ * Upon pressing the slider, expand or retract based on current state
+ */
+document.getElementById("purple-slider").addEventListener("click", function(){
+    if (sidebar_visible) {
+        sidebar_visible = !sidebar_visible;
+        sidebar_element.setAttribute('class', 'purple-sidebar purple-sidebar-retracted');
+        document.getElementById('arrow').setAttribute('class', 'arrow');
+    } else {
+        sidebar_visible = !sidebar_visible;
+        sidebar_element.setAttribute('class', 'purple-sidebar');
+        document.getElementById('arrow').setAttribute('class', 'arrow arrow-retracted');
+    }
 });
 
+/**
+ * Go through all paragraphs and mark them
+ */
 var items = document.body.getElementsByTagName("p");
 for (var i = 0; i < items.length; i++) {
     var container = document.createElement('div');
