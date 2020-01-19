@@ -5,13 +5,11 @@ const default_values = {color_scheme:'default', sidebar_width: 100, sidebar_font
 
 'use strict';
 
-chrome.runtime.onInstalled.addListener(function(details) {
+
+chrome.runtime.onInstalled.addListener(function() {
   chrome.storage.sync.set(default_values, function() {
   });
   chrome.tabs.create({url: "welcome.html"}, function (tab) {
-  });
-  chrome.storage.sync.set({color: '#3aa757'}, function() {
-    console.log('The color is green.');
   });
   chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
     chrome.declarativeContent.onPageChanged.addRules([{
