@@ -1,4 +1,7 @@
 function showCurrent() {
+  particlesJS.load('particles-js', 'particles.json', function() {
+    console.log('callback - particles.js config loaded');
+    });
   chrome.storage.sync.get(['color_scheme', 'sidebar_width', 'sidebar_font_size'], function(result) {
     console.log(result.color_scheme)
     //console.log("width " + result.sidebar_width)
