@@ -135,6 +135,18 @@ function callback(stage, content) {
             if(document.getElementById("switch-reader")) {
               document.getElementById("switch-reader").style.display = 'block';
             }
+
+            if (content.document_score > -1 && content.document_score < -0.5) {
+              document.getElementById("overallSentiment").innerHTML = "Sentiment: Very Negative";
+            } else if (content.document_score > -0.5 && content.document_score < -0.25) {
+              document.getElementById("overallSentiment").innerHTML = "Sentiment: Negative";
+            } else if (content.document_score > -0.25 && content.document_score < 0.25) {
+              document.getElementById("overallSentiment").innerHTML = "Sentiment: Neutral";
+            } else if (content.document_score > 0.25 && content.document_score < 0.5) {
+              document.getElementById("overallSentiment").innerHTML = "Sentiment: Positive";
+            } else if (content.document_score > 0.5 && content.document_score < 1) {
+              document.getElementById("overallSentiment").innerHTML = "Sentiment: Very Positive";
+            }            
             break;
         case 2:
             console.log("Summary");
