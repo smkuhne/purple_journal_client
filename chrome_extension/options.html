@@ -1,21 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-  
-  <title>Purple Journal Options</title>
+    <title>Purple Journal Options</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="thirdParty/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <script src="thirdParty/jquery.min.js"></script>
+    <script src="thirdParty/bootstrap.min.js"></script>
   </head>
-  <body>
-    <div id="optionOnload">
-      <h2> Welcome to Purple Journal settings </h2>
-      
-        <h4>Select your preferred color scheme</h4>
-        <input type="radio" name="color_scheme"
-                            id="default" value="default" /> Default<br />
-        <input type="radio" name="color_scheme"
-                            id="light" value="light" /> Light <br />
-        <input type="radio" name="color_scheme"
-                            id="dark" value="dark" />Dark<br />
-        <h4>Select your perferred sidebar width(in percent relative to the
+  <body style="background: rgb(128,51,206); background: linear-gradient(0deg,
+    rgba(128,51,206,1) 25%, rgba(186, 147, 216, 0.5) 100%); height:100vh">
+    <div class="container" id="optionOnload">
+      <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                    <img src="images/Landing_Page_Logo.png" alt="Logo" style="width: 100%; margin-top: 33%;">
+        <h4>Select your preferred sidebar color scheme</h4>
+        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="default">
+          <input type="radio" name="color_scheme" class="mdl-radio__button"
+            id="default" value="default" />
+          <span class="mdl-radio__label">Default</span>
+        </label>
+        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="light">
+          <input type="radio" name="color_scheme" class="mdl-radio__button"
+            id="light" value="light" />
+          <span class="mdl-radio__label">Light </span>
+        </label>
+        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="dark">
+          <input type="radio" name="color_scheme" class="mdl-radio__button"
+            id="dark" value="dark" />
+          <span class="mdl-radio__label">Dark</span>
+        </label>
+        <!--<h4>Select your perferred sidebar width(in percent relative to the
           original size)</h4>
         <input type="number" name="sidebar_width" min="50" max="200" step="25"
         />
@@ -23,11 +42,15 @@
           original size)</h4>
         <input type="number" name="sidebar_font_size" min="50" max="200"
         step="25" /> 
-        <br />
+        <br /> -->
        
-       <button id="buttonThatSaves" >Save Status</button>
-    </div>
-    <script src="options.js" />
-  </script>
+       <button id="buttonThatSaves" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" >Save Status</button>
+
+                </div>
+            </div>
+        </div>
+
+          </div>
+    <script src="options.js"></script>
   </body>
 </html>
