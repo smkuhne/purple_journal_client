@@ -7,6 +7,22 @@ console.log("Now loading purple journal extension.");
 var arrow = '<svg id="arrow" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path stroke="white" d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/><path fill="none" d="M0 0h24v24H0V0z"/></svg>';
 var sidebar_visible = false;
 var page_original = "";
+var chart = "";
+var chart_theme = "light2";
+
+chrome.storage.sync.get(['color_scheme'], function(result) {
+  switch(result.color_scheme) {
+    case 'dark':
+      chart_theme = 'dark2';
+      break;
+    case 'light':
+      chart_theme = 'light2';
+      break;
+    default:
+      chart_theme = 'dark2';
+      break;
+  }
+});
 
 /**
  * Sets up the sidebar structure and appends classes and information
@@ -55,10 +71,12 @@ fetch(url)
           if (page == "original") {
             page_content.innerHTML = "";
             page_content.appendChild(custom_reader);
+            sidebar_slider.style.marginLeft = '-60px';
             console.log('custom');
             page = "custom";
           } else if (page == "custom") {
             page_content.innerHTML = page_original;
+            sidebar_slider.style.marginLeft = '-20px';
             console.log('original');
             page = "original";
           }
@@ -66,6 +84,36 @@ fetch(url)
       }
       document.getElementById("options-button").addEventListener('click', function(){
         chrome.tabs.create({ 'url': chrome.runtime.getURL('options.html') });
+      });
+
+      chrome.storage.sync.get(['color_scheme'], function(result) {
+        switch(result.color_scheme) {
+          case 'default':
+            document.getElementById("main-section").setAttribute('style', 'background-color:#32373A !important; color: white !important');
+            var articles = document.getElementsByClassName("mdl-list__item");
+            for (var i = 0; i < articles.length; i++) {
+              articles[i].setAttribute('style', 'color: white !important');
+            }
+            custom_reader.setAttribute('style', 'margin-left: 400px; background-color: #FFFFFF; color: #000000');
+            break;
+          case 'dark':
+            document.getElementById("main-section").setAttribute('style', 'background-color:#32373A !important; color: white !important');
+            var articles = document.getElementsByClassName("mdl-list__item");
+            for (var i = 0; i < articles.length; i++) {
+              articles[i].setAttribute('style', 'color: white !important');
+            }
+            custom_reader.setAttribute('style', 'margin-left: 400px; background-color: #32373A; color: #FFFFFF');
+            break;
+          case 'light':
+            document.getElementById("main-section").setAttribute('style', "background-color:#FFFFFF !important; color: black !important");
+            var articles = document.getElementsByClassName("mdl-list__item");
+            for (var i = 0; i < articles.length; i++) {
+              articles[i].setAttribute('style', 'color: black !important');
+            }
+            sidebar_slider.setAttribute('style', 'filter: invert(1);');
+            custom_reader.setAttribute('style', 'margin-left: 400px; background-color: #FFFFFF; color: #000000');
+            break;
+        }
       });
     });
 
@@ -98,11 +146,8 @@ function callback(stage, content) {
 
             var header = document.createElement('h4');
             header.setAttribute('style', 'padding: 30px; margin: 0px; background-color: #7a32b2; color: white')
-            var splitter = document.createElement('hr');
-            splitter.setAttribute('style', 'margin: 0px;')
             header.innerHTML = document.title;
             custom_reader.appendChild(header);
-            custom_reader.appendChild(splitter);
 
             for (let i = 0; i < content.sentiments.sentences.length; i++) {
               if (content.sentiments.sentences[i].sentiment.score < -0.25) {
@@ -205,12 +250,12 @@ function createParagraph(general_sentiment, content) {
 }
 
   function updateSentimentChart(positive, neutral, negative) {
-    var chart = new CanvasJS.Chart("sentimentChartContainer", {
-      theme: "dark2", 
+    chart = new CanvasJS.Chart("sentimentChartContainer", {
+      theme: chart_theme, 
       exportEnabled: false,
       animationEnabled: true,
       title: {
-        text: "This Article is approximately"
+        text: "Sentiment Distribution"
       },
       data: [{
         type: "pie",
@@ -220,6 +265,9 @@ function createParagraph(general_sentiment, content) {
         legendText: "{label}",
         indexLabelFontSize: 16,
         indexLabel: "{label}",
+        chartArea: {
+          backgroundColor: '#FFFFFF'
+        },
         dataPoints: [{y: positive, label:"Positive", color: "#6b97e8"}, {y: neutral,
           label:"Neutral", color: "#9d5edb"}, {y: negative, label:"Negative", color: "#de647c"}]
       }]
