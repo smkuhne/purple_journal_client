@@ -306,10 +306,10 @@ function createParagraph(general_sentiment, content) {
     if(window.location.href.indexOf("chrome-extension://") != 0) {
       addNextArticles([{name: "Loading articles...", url: "#"}]);
       analyze_article(window.location, callback, true);
+    } else {
       particlesJS.load('particles-js', 'particles.json', function() {
       console.log('callback - particles.js config loaded');
       });
-    } else {
       document.getElementById("switch-reader").remove();
       updateSentimentChart(22, 74, 4);
       updateSummaryText("When browsing your favorite news sites, this tab will show you: a summary of the article, and whether the article takes a positive, negative, or neutral approach to the topic. Additionally, it will display suggested further readings relating to the topic in the article.");
