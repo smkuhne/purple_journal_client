@@ -188,15 +188,15 @@ function createParagraph(general_sentiment, content) {
     if(window.location.href.indexOf("chrome-extension://") != 0) {
       analyze_article(window.location, callback, true);
     } else {
-      updateSentimentChart(40, 20, 40);
+      updateSentimentChart(22, 74, 4);
       updateSummaryText("When browsing your favorite news sites, this tab will show you: a summary of the article, and whether the article takes a positive, negative, or neutral approach to the topic. Additionally, it will display suggested further readings relating to the topic in the article.");
+    
+      var items = [
+        {name:"Example link #1", url: "#"},
+        {name:"Example link #2", url: "#"},
+        {name:"Example link #3", url: "#"}
+        ]
     }
-
-    var items = [
-      {name:"CNN", url: "https://www.cnn.com"},
-      {name:"New York Times", url: "https://www.nytimes.com"},
-      {name:"Fox News", url: "https://www.foxnews.com"}
-      ]
     addNextArticles(items);
   }
 
