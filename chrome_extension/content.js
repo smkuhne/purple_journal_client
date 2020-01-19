@@ -52,25 +52,6 @@ document.getElementById("purple-slider").addEventListener("click", function(){
 
 analyze_article(window.location, callback, true);
 
-/**
- * Go through all paragraphs and mark them
- */
-var items = document.body.getElementsByTagName("p");
-for (var i = 0; i < items.length; i++) {
-    var container = document.createElement('div');
-    container.setAttribute('style', 'display: flex; flex-direction: row; width: 100%')
-    var bar = document.createElement('div');
-    bar.setAttribute('style', 'background-color:green; min-width: 10px !important; height: 100%; display: block; margin-right: 5px;');
-    var inner = document.createElement('div');
-    inner.setAttribute('style', 'display: block');
-    inner.innerHTML = items[i].innerHTML;
-    container.appendChild(bar);
-    container.appendChild(inner);
-    items[i].innerHTML = '';
-    items[i].prepend(container);
-    bar.style.height = `${inner.clientHeight}px`;
-}
-
 function callback(stage, content) {
     switch(stage) {
         case 1:
@@ -91,6 +72,51 @@ function callback(stage, content) {
             neutral = Math.round(neutral / total * 100);
             positive = Math.round(positive / total * 100);
             updateSentimentChart(positive, neutral, negative);
+
+            var items = document.body.getElementsByTagName("p");
+            var i = 0;
+
+
+            while (i < content.sentiments.sentences.length) {
+                for (let j = 0; j < items.length; j++) {
+                    var sentiment = 0;
+                    var num = 0;
+
+                    if (items[j].textContent.indexOf(content.sentiments.sentences[i].text.content) == -1) {
+                        continue;
+                    }
+
+                    while (items[j].textContent.indexOf(content.sentiments.sentences[i].text.content) != -1) {
+                        sentiment += content.sentiments.sentences[i].sentiment.score;
+                        num++;
+                        i++;
+                    }
+
+                    var averageSentiment = sentiment / num;
+                    var color = "white";
+
+                    if (averageSentiment < -0.25) {
+                        color = "#de647c";
+                    } else if (averageSentiment > 0.25) {
+                        color = "#6b97e8";
+                    } else {
+                        color = "#9d5edb";
+                    }
+
+                    var container = document.createElement('div');
+                    container.setAttribute('style', 'display: flex; flex-direction: row; width: 100%')
+                    var bar = document.createElement('div');
+                    bar.setAttribute('style', `background-color:${color}; min-width: 10px !important; height: 100%; display: block; margin-right: 5px;border-radius: 5px`);
+                    var inner = document.createElement('div');
+                    inner.setAttribute('style', 'display: block');
+                    inner.innerHTML = items[i].innerHTML;
+                    container.appendChild(bar);
+                    container.appendChild(inner);
+                    items[i].innerHTML = '';
+                    items[i].prepend(container);
+                    bar.style.height = `${inner.clientHeight}px`;
+                }
+            }
             break;
         case 2:
             updateSummaryText(content.sm_api_content);
