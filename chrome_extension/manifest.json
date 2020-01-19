@@ -5,7 +5,7 @@
   "permissions": ["activeTab", "declarativeContent", "storage", "tabs"],
   "options_page": "options.html",
   "background": {
-    "scripts": ["background.js", "thirdParty/split.min.js"],
+    "scripts": ["background.js", "thirdParty/canvasjs.min.js", "HelloWorld.js"],
     "persistent": false
   },
    "content_scripts": [
@@ -39,7 +39,7 @@
     	"https://*.sacbee.com/*"
      	],
      "css": ["styles.css"],
-     "js": ["thirdParty/split.min.js", "content.js"],
+     "js": ["HelloWorld.js", "thirdParty/canvasjs.min.js", "content.js"],
      "run_at": "document_idle"
    }
  ],

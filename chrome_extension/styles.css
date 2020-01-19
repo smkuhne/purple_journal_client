@@ -9,7 +9,7 @@
 
 .purple-sidebar {
     height: 100vh;
-    width: 320px;
+    width: 420px;
     position: fixed;
     z-index: 1000;
     top: 0px;
@@ -23,11 +23,11 @@
 }
 
 .purple-sidebar-retracted {
-    margin-left: -300px;
+    margin-left: -400px;
 }
 
 .purple-content {
-    width: 300px;
+    width: 400px;
 }
 
 .purple-slider {
@@ -37,7 +37,6 @@
     width: 40px;
     height: 60px;
     background-color: #263238;
-    margin-left: -20px;
     border-radius: 0px 5px 5px 0px;
 }
 
@@ -47,4 +46,12 @@
 
 .arrow-retracted {
     transform: rotateZ(180deg);
+}
+
+.mdl-navigation__link:hover {
+    background-color: transparent !important;
+}
+
+.mdl-list__item {
+    color: white !important;
 }
