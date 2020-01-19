@@ -5,14 +5,14 @@
   "permissions": ["activeTab", "declarativeContent", "storage", "tabs"],
   "options_page": "options.html",
   "background": {
-    "scripts": ["background.js"],
+    "scripts": ["background.js", "thirdParty/split.min.js"],
     "persistent": false
   },
    "content_scripts": [
    {
      "matches": ["https://*.nytimes.com/*"],
      "css": ["styles.css"],
-     "js": ["content.js"],
+     "js": ["thirdParty/split.min.js", "content.js"],
      "run_at": "document_idle"
    }
  ],
