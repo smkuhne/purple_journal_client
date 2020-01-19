@@ -5,6 +5,8 @@
 'use strict';
 
 chrome.runtime.onInstalled.addListener(function() {
+  chrome.tabs.create({url: "welcome.html"}, function (tab) {
+  });
   chrome.storage.sync.set({color: '#3aa757'}, function() {
     console.log('The color is green.');
   });
